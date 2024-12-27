@@ -1,0 +1,82 @@
+openapi: 3.1.0
+info:
+  title: PulTime User Service API
+  version: 1.0.0
+
+paths:
+  /user/current:
+    patch:
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/user-schema.yaml#/components/schemas/UpdateUserRequest'
+      responses:
+        200:
+          description: Berhasil update pengguna
+          content:
+            application/json:
+              schema:
+                $ref: '../schemas/user-schema.yaml#/components/schemas/GetUserByIdResponse'
+        400:
+          description: Gagal update pengguna
+          content:
+            application/json:
+              schema:
+                $ref: '../schemas/error-schema.yaml#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - User
+      responses:
+        200:
+          description: Berhasil mengambil data pengguna
+          content:
+            application/json:
+              schema:
+                $ref: '../schemas/user-schema.yaml#/components/schemas/GetUserByIdResponse'
+        400:
+          description: Gagal mengambil data pengguna
+          content:
+            application/json:
+              schema:
+                $ref: '../schemas/error-schema.yaml#/components/schemas/ErrorResponse'
+
+  /user/current/classes:
+    get:
+      tags:
+        - User
+      responses:
+        200:
+          description: Berhasil mengambil data kelas pengguna
+          content:
+            application/json:
+              schema:
+                $ref: '../schemas/user-schema.yaml#/components/schemas/GetUserClassesResponse'
+        400:
+          description: Gagal mengambil data kelas pengguna
+          content:
+            application/json:
+              schema:
+                $ref: '../schemas/error-schema.yaml#/components/schemas/ErrorResponse'
+
+  /user/current/teams:
+    get:
+      tags:
+        - User
+      responses:
+        200:
+          description: Berhasil mengambil data tim pengguna
+          content:
+            application/json:
+              schema:
+                $ref: '../schemas/user-schema.yaml#/components/schemas/GetUserTeamsResponse'
+        400:
+          description: Gagal mengambil data tim pengguna
+          content:
+            application/json:
+              schema:
+                $ref: '../schemas/error-schema.yaml#/components/schemas/ErrorResponse'

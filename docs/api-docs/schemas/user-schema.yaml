@@ -1,0 +1,95 @@
+components:
+  schemas:
+    UpdateUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+      required:
+        - username
+
+    GetUserByIdResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        status:
+          type: string
+          example: OK
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+            email:
+              type: string
+            username:
+              type: string
+            created_at:
+              type: string
+            updated_at:
+              type: string
+
+    GetUserClassesResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        status:
+          type: string
+          example: OK
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              class_name:
+                type: string
+              class_code:
+                type: string
+              courses:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    course_name:
+                      type: string
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+              created_at:
+                type: string
+              updated_at:
+                type: string
+
+    GetUserTeamsResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        status:
+          type: string
+          example: OK
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              team_name:
+                type: string
+              team_code:
+                type: string
+              created_at:
+                type: string
+              updated_at:
+                type: string

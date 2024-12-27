@@ -1,0 +1,88 @@
+components:
+  schemas:
+    TeamRequest:
+      type: object
+      properties:
+        team_name:
+          type: string
+      required:
+        - team_name
+
+    TeamResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        status:
+          type: string
+          example: OK
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+            team_name:
+              type: string
+            team_code:
+              type: string
+            created_at:
+              type: string
+            updated_at:
+              type: string
+
+    TeamMemberRequest:
+      type: object
+      properties:
+        user_id:
+          type: string
+      required:
+        - user_id
+
+    TeamMemberResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        status:
+          type: string
+          example: OK
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+            email:
+              type: string
+            username:
+              type: string
+            created_at:
+              type: string
+            updated_at:
+              type: string
+
+    TeamMembersResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        status:
+          type: string
+          example: OK
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              email:
+                type: string
+              username:
+                type: string
+              created_at:
+                type: string
+              updated_at:
+                type: string

@@ -1,0 +1,89 @@
+openapi: 3.0.0
+info:
+  title: PulTime API
+  version: 1.0.0
+  description: This Swagger documentation provides the API endpoints for the PulTime website.
+  contact:
+    name: Evander Tokang
+    url: https://www.linkedin.com/in/evandertk
+    email: tokang.evander@gmail.com
+servers:
+  - url: 'http://localhost:3000'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - BearerAuth: []
+
+paths:
+  /auth/signup:
+    $ref: './auth-service.yaml#/paths/~1auth~1signup'
+
+  /auth/login:
+    $ref: './auth-service.yaml#/paths/~1auth~1login'
+
+  /auth/logout:
+    $ref: './auth-service.yaml#/paths/~1auth~1logout'
+
+  /auth/refresh-token:
+    $ref: './auth-service.yaml#/paths/~1auth~1refresh-token'
+
+  /auth/request-reset-password:
+    $ref: './auth-service.yaml#/paths/~1auth~1request-reset-password'
+
+  /auth/reset-password:
+    $ref: './auth-service.yaml#/paths/~1auth~1reset-password'
+
+  /user/current:
+    $ref: './user-service.yaml#/paths/~1user~1current'
+
+  /user/current/classes:
+    $ref: './user-service.yaml#/paths/~1user~1current~1classes'
+
+  /user/current/teams:
+    $ref: './user-service.yaml#/paths/~1user~1current~1teams'
+
+  /class:
+    $ref: './class-service.yaml#/paths/~1class'
+
+  /class/{id}:
+    $ref: './class-service.yaml#/paths/~1class~1{id}'
+
+  /class/{id}/users:
+    $ref: './class-service.yaml#/paths/~1class~1{id}~1users'
+
+  /class/{id}/users/{user_id}:
+    $ref: './class-service.yaml#/paths/~1class~1{id}~1users~1{user_id}'
+
+  /class/{class_code}/users:
+    $ref: './class-service.yaml#/paths/~1class~1{class_code}~1users'
+
+  /team:
+    $ref: './team-service.yaml#/paths/~1team'
+
+  /team/{id}:
+    $ref: './team-service.yaml#/paths/~1team~1{id}'
+
+  /team/{id}/users:
+    $ref: './team-service.yaml#/paths/~1team~1{id}~1users'
+
+  /team/{id}/users/{user_id}:
+    $ref: './team-service.yaml#/paths/~1team~1{id}~1users~1{user_id}'
+
+  /team/{team_code}/users:
+    $ref: './team-service.yaml#/paths/~1team~1{team_code}~1users'
+
+  /tasks:
+    $ref: './task-service.yaml#/paths/~1tasks'
+
+  /tasks/{id}:
+    $ref: './task-service.yaml#/paths/~1tasks~1{id}'
+
+  /tasks/by-context:
+    $ref: './task-service.yaml#/paths/~1tasks~1by-context'
+
+  /tasks/by-user:
+    $ref: './task-service.yaml#/paths/~1tasks~1by-user'
