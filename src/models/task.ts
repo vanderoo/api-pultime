@@ -62,6 +62,8 @@ export function toGetAllTaskResponse(tasks: Task[]): GetAllTaskResponse {
         progress: task.progress as "not_started" | "in_progress" | "completed",
         created_at: task.createdAt,
         updated_at: task.updatedAt,
+        user_id: task.userId,
+        course_id: task.courseId,
     }));
 }
 

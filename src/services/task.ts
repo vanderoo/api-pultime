@@ -7,6 +7,7 @@ import {
     TaskUpdateRequest, toGetAllTaskResponse, toTaskResponse
 } from "../models/task";
 import {ApiError} from "../utils/api-error";
+import {logger} from "../configs/logging";
 
 export class TaskService implements ITaskService {
 
@@ -49,6 +50,8 @@ export class TaskService implements ITaskService {
                 context: request.context,
                 teamId: request.team_id,
                 classId: request.class_id,
+                userId: request.user_id || null,
+                courseId: request.course_id || null,
             },
         });
 
@@ -56,6 +59,14 @@ export class TaskService implements ITaskService {
     }
 
     async delete(taskId: string): Promise<Record<string, any>> {
+        const task = await this.prisma.task.findUnique({
+            where: { id: taskId },
+        });
+
+        if (!task) {
+            throw new ApiError(404, 'NOT_FOUND', [{ message: 'Task not found' }]);
+        }
+
         await this.prisma.task.delete({
             where: { id: taskId },
         });
@@ -69,7 +80,7 @@ export class TaskService implements ITaskService {
         });
 
         if (!task) {
-            throw new ApiError(404, "Task not found");
+            throw new ApiError(404, 'NOT_FOUND', [{ message: 'Task not found' }]);
         }
 
         return toTaskResponse(task);
@@ -88,6 +99,7 @@ export class TaskService implements ITaskService {
                 ]
             },
         });
+        logger.debug(`courses: ${courses}`)
 
         return toGetAllTaskResponse(tasks);
     }
@@ -106,15 +118,19 @@ export class TaskService implements ITaskService {
             },
         });
 
+        logger.debug(`courses: ${courses}`)
+
         const tasks = await this.prisma.task.findMany({
             where: {
                 OR: [
                     { teamId: { in: userToFind.teams.map(team => team.id) } },
-                    { classId: { in: userToFind.classes.map(cls => cls.id) } },
-                    { userId: user.id },
-                ],
-                NOT: [
-                    { courseId: { in: courses } }
+                    {
+                        classId: { in: userToFind.classes.map(cls => cls.id) },
+                        AND: [
+                            { OR: [{ courseId: null }, { courseId: { notIn: courses } }] }
+                        ]
+                    },
+                    { userId: user.id }
                 ]
             },
         });

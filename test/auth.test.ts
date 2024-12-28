@@ -1,5 +1,5 @@
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
-import { PrismaClient } from '../src/database/generated-prisma-client';
+import { PrismaClient } from '@prisma/client';
 import { mockGenerateToken, mockValidateToken } from "./mocks/token"
 jest.mock("../src/utils/token", () => ({
     generateToken: mockGenerateToken,
