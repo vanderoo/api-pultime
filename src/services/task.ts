@@ -123,7 +123,10 @@ export class TaskService implements ITaskService {
         const tasks = await this.prisma.task.findMany({
             where: {
                 OR: [
-                    { teamId: { in: userToFind.teams.map(team => team.id) } },
+                    {
+                        teamId: { in: userToFind.teams.map(team => team.id) },
+                        assignee: userToFind.id
+                    },
                     {
                         classId: { in: userToFind.classes.map(cls => cls.id) },
                         AND: [

@@ -3,6 +3,7 @@ import { TaskController } from "../controllers/task";
 import { TaskService } from "../services/task";
 import { PrismaClient } from "@prisma/client";
 import {
+    taskRequestUpdateValidator,
     taskRequestValidator
 
 } from "../validators/task";
@@ -19,7 +20,7 @@ export const taskRoutes = (prisma: PrismaClient) => {
     });
 
     router.post('/task', validate(taskRequestValidator), taskController.create.bind(taskController));
-    router.put('/task/:id', validate(taskRequestValidator),taskController.update.bind(taskController));
+    router.put('/task/:id', validate(taskRequestUpdateValidator),taskController.update.bind(taskController));
     router.delete('/task/:id', taskController.delete.bind(taskController));
     router.get('/task/:id', taskController.findById.bind(taskController));
     router.get('/tasks/by-context/:context/:context_id', taskController.findByContext.bind(taskController));
