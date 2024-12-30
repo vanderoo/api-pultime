@@ -11,11 +11,13 @@ export class Server {
   private readonly app: Express;
   private readonly prisma: PrismaClient;
   private readonly port: number;
+  private readonly hostname: string;
 
-  constructor(app: Express, port: number, prismaClient: PrismaClient) {
+  constructor(app: Express, port: number, prismaClient: PrismaClient, hostname: string) {
     this.app = app;
     this.prisma = prismaClient;
     this.port = port;
+    this.hostname = hostname;
 
     this.handleShutdownSignals()
   }
@@ -53,8 +55,8 @@ export class Server {
     try {
       this.configureApp();
       await initializeDatabase(this.prisma);
-      this.app.listen(this.port, () => {
-        logger.info(`Server is running on port ${this.port}`);
+      this.app.listen(this.port, this.hostname, () => {
+        logger.info(`Server is running on http://${this.hostname}:${this.port}`);
       });
     } catch (error) {
       logger.error(`Failed to start the server: ${error.message}`);
