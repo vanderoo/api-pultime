@@ -64,9 +64,10 @@ CREATE TABLE `tasks` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(255) NOT NULL,
     `description` TEXT NULL,
-    `end_date` DATETIME NULL,
-    `start_date` DATETIME NULL,
+    `end_date` VARCHAR(255) NULL,
+    `start_date` VARCHAR(255) NULL,
     `class_id` VARCHAR(255) NULL,
+    `course_id` VARCHAR(255) NULL,
     `team_id` VARCHAR(255) NULL,
     `user_id` VARCHAR(255) NULL,
     `assignee` VARCHAR(255) NULL,
@@ -110,6 +111,9 @@ ALTER TABLE `tasks` ADD CONSTRAINT `tasks_class_id_fkey` FOREIGN KEY (`class_id`
 
 -- AddForeignKey
 ALTER TABLE `tasks` ADD CONSTRAINT `tasks_team_id_fkey` FOREIGN KEY (`team_id`) REFERENCES `teams`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `tasks` ADD CONSTRAINT `tasks_course_id_fkey` FOREIGN KEY (`course_id`) REFERENCES `courses`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `_UserClasses` ADD CONSTRAINT `_UserClasses_A_fkey` FOREIGN KEY (`A`) REFERENCES `classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
