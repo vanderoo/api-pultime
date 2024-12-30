@@ -19,7 +19,7 @@ const mockPrisma = prisma as unknown as DeepMockProxy<PrismaClient>;
 describe("AuthService Integration Testing with Prisma Mock", () => {
 
     beforeAll(async () => {
-        server = new Server(express(), 3000, mockPrisma);
+        server = new Server(express(), 3000, mockPrisma, 'localhost');
         await server.start();
         app = server.getApp();
     });
