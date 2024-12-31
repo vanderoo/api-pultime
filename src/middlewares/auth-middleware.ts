@@ -29,7 +29,11 @@ export const authMiddleware = (prismaClient: any, secret: string) => {
                 return;
             }
         } catch (error) {
-            console.error('Invalid token:', error);
+            if (error instanceof jwt.TokenExpiredError) {
+                const err = new ApiError(401, 'UNAUTHORIZED_TOKEN_EXPIRED', [{ message: "Token expired. Please log in again." }]);
+                sendErrorResponse(res, err);
+                return;
+            }
             const err = new ApiError(401, 'UNAUTHORIZED', [{ message: "Invalid or expired token." }]);
             sendErrorResponse(res, err);
             return;
