@@ -73,7 +73,7 @@ export class AuthService implements IAuthService {
         }
 
         const accessToken = await generateToken(
-            { "id": user.id, "username": user.username, "iss": this.JWT_KEY },
+            { "id": user.id, "username": user.username },
             this.JWT_SECRET, "1m"
         );
 
