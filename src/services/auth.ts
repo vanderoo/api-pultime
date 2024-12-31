@@ -122,9 +122,9 @@ export class AuthService implements IAuthService {
         const userData = decoded;
 
         const newToken = await generateToken(
-            { "id": userData.id, "username": userData.username, "iss": this.JWT_KEY },
+            { "id": userData.id, "username": userData.username },
             this.JWT_SECRET,
-            "1h"
+            "10s"
         );
 
         const accessTokenExpires = new Date();
