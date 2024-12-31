@@ -74,7 +74,7 @@ export class AuthService implements IAuthService {
 
         const accessToken = await generateToken(
             { "id": user.id, "username": user.username, "iss": this.JWT_KEY },
-            this.JWT_SECRET, "30"
+            this.JWT_SECRET, "1m"
         );
 
         const refreshToken = await generateToken(
