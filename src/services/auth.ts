@@ -19,12 +19,10 @@ export class AuthService implements IAuthService {
     private prisma: PrismaClient;
     private readonly JWT_SECRET: Secret;
     private readonly REFRESH_JWT_SECRET: Secret;
-    private readonly JWT_KEY: string;
 
     constructor(prisma: PrismaClient) {
         this.JWT_SECRET = process.env.JWT_SECRET;
         this.REFRESH_JWT_SECRET = process.env.REFRESH_JWT_SECRET;
-        this.JWT_KEY = process.env.JWT_KEY;
         this.prisma = prisma;
     }
 

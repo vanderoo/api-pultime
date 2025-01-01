@@ -1,0 +1,1229 @@
+openapi: 3.0.0
+info:
+  title: PulTime API
+  version: 1.0.0
+  description: This Swagger documentation provides the API endpoints for the PulTime website.
+  contact:
+    name: Evander Tokang
+    url: 'https://www.linkedin.com/in/evandertk'
+    email: tokang.evander@gmail.com
+servers:
+  - url: 'http://localhost:3000'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - BearerAuth: []
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+                confirm_password:
+                  type: string
+              required:
+                - email
+                - username
+                - password
+                - confirm_password
+      responses:
+        '201':
+          description: Berhasil mendaftarkan pengguna
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 201
+                  status:
+                    type: string
+                    example: USER_CREATED
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      username:
+                        type: string
+                      created_at:
+                        type: string
+                      updated_at:
+                        type: string
+        '400':
+          description: Gagal mendaftarkan pengguna
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Berhasil login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                      refresh_token:
+                        type: string
+        '401':
+          description: Kredensial tidak valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  /auth/logout:
+    delete:
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+              required:
+                - refresh_token
+      responses:
+        '200':
+          description: Berhasil logout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Successfully logged out
+        '400':
+          description: Token tidak valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  /auth/refresh-token:
+    post:
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+              required:
+                - refresh_token
+      responses:
+        '200':
+          description: Berhasil refresh token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+        '403':
+          description: Refresh token tidak valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  /auth/request-reset-password:
+    post:
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+                - email
+      responses:
+        '200':
+          description: Permintaan reset password berhasil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Password reset email sent successfully. Please check your email for further instructions.
+        '404':
+          description: Email tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  /auth/reset-password:
+    post:
+      tags:
+        - Authentication
+      security: []
+      parameters:
+        - name: token
+          in: query
+          required: true
+          description: Token untuk verifikasi reset password
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                confirm_password:
+                  type: string
+              required:
+                - password
+                - confirm_password
+      responses:
+        '200':
+          description: Berhasil reset password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Password has been reset successfully.
+        '400':
+          description: Token tidak valid atau kedaluwarsa
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  /user/current:
+    patch:
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+              required:
+                - username
+      responses:
+        '200':
+          description: Berhasil update pengguna
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1user~1current/get/responses/200/content/application~1json/schema'
+        '400':
+          description: Gagal update pengguna
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+    get:
+      tags:
+        - User
+      responses:
+        '200':
+          description: Berhasil mengambil data pengguna
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      username:
+                        type: string
+                      created_at:
+                        type: string
+                      updated_at:
+                        type: string
+        '400':
+          description: Gagal mengambil data pengguna
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  /user/current/classes:
+    get:
+      tags:
+        - User
+      responses:
+        '200':
+          description: Berhasil mengambil data kelas pengguna
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        class_name:
+                          type: string
+                        class_code:
+                          type: string
+                        courses:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              course_name:
+                                type: string
+                              created_at:
+                                type: string
+                              updated_at:
+                                type: string
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+        '400':
+          description: Gagal mengambil data kelas pengguna
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  /user/current/teams:
+    get:
+      tags:
+        - User
+      responses:
+        '200':
+          description: Berhasil mengambil data tim pengguna
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        team_name:
+                          type: string
+                        team_code:
+                          type: string
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+        '400':
+          description: Gagal mengambil data tim pengguna
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  /class:
+    post:
+      tags:
+        - Class
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                class_name:
+                  type: string
+                courses:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      course_name:
+                        type: string
+              required:
+                - class_name
+                - courses
+      responses:
+        '200':
+          description: Berhasil membuat kelas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      class_name:
+                        type: string
+                      class_code:
+                        type: string
+                      courses:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            course_name:
+                              type: string
+                            created_at:
+                              type: string
+                            updated_at:
+                              type: string
+                      created_at:
+                        type: string
+                      updated_at:
+                        type: string
+        '400':
+          description: Gagal membuat kelas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  '/class/{id}':
+    put:
+      tags:
+        - Class
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID kelas yang ingin diupdate
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                class_name:
+                  type: string
+                courses:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      course_id:
+                        type: string
+                      course_name:
+                        type: string
+              required:
+                - class_name
+                - courses
+      responses:
+        '200':
+          description: Berhasil update data kelas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1class/post/responses/200/content/application~1json/schema'
+        '400':
+          description: Gagal update data kelas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+    delete:
+      tags:
+        - Class
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID kelas yang ingin dihapus
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Berhasil menghapus kelas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1class/post/responses/200/content/application~1json/schema'
+        '400':
+          description: Gagal menghapus kelas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+    get:
+      tags:
+        - Class
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID kelas yang ingin diambil
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Berhasil mengambil data kelas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1class/post/responses/200/content/application~1json/schema'
+        '400':
+          description: Gagal mengambil data kelas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  '/class/{id}/users':
+    get:
+      tags:
+        - Class
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID kelas yang ingin diambil
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Berhasil mengambil data member kelas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        email:
+                          type: string
+                        username:
+                          type: string
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+        '400':
+          description: Gagal mengambil data member kelas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  '/class/{id}/users/{user_id}':
+    delete:
+      tags:
+        - Class
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID kelas yang ingin diakses
+          schema:
+            type: string
+        - name: user_id
+          in: path
+          required: true
+          description: ID user yang ingin dihapus
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Berhasil hapus user dari kelas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1class~1{id}~1users/get/responses/200/content/application~1json/schema'
+        '400':
+          description: Gagal hapus user dari kelas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  '/class/{class_code}/users':
+    post:
+      tags:
+        - Class
+      parameters:
+        - name: class_code
+          in: path
+          required: true
+          description: The class code of the class where the user will be added.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+              required:
+                - user_id
+      responses:
+        '200':
+          description: Berhasil memasukkan user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      username:
+                        type: string
+                      created_at:
+                        type: string
+                      updated_at:
+                        type: string
+        '400':
+          description: Gagal memasukkan user
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  /team:
+    post:
+      tags:
+        - Team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                team_name:
+                  type: string
+              required:
+                - team_name
+      responses:
+        '200':
+          description: Berhasil membuat team
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      team_name:
+                        type: string
+                      team_code:
+                        type: string
+                      created_at:
+                        type: string
+                      updated_at:
+                        type: string
+        '400':
+          description: Gagal membuat team
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  status:
+                    type: string
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                        message:
+                          type: string
+  '/team/{id}':
+    put:
+      tags:
+        - Team
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID team yang ingin diupdate
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1team/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: Berhasil update data team
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/200/content/application~1json/schema'
+        '400':
+          description: Gagal update data team
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+    delete:
+      tags:
+        - Team
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID team yang ingin dihapus
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Berhasil menghapus team
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/200/content/application~1json/schema'
+        '400':
+          description: Gagal menghapus team
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+    get:
+      tags:
+        - Team
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID team yang ingin diambil
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Berhasil mengambil data team
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/200/content/application~1json/schema'
+        '400':
+          description: Gagal mengambil data team
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  '/team/{id}/users':
+    get:
+      tags:
+        - Team
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID team yang ingin diambil
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Berhasil mengambil data member team
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        email:
+                          type: string
+                        username:
+                          type: string
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+        '400':
+          description: Gagal mengambil data member team
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  '/team/{id}/users/{user_id}':
+    delete:
+      tags:
+        - Team
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID team yang ingin diakses
+          schema:
+            type: string
+        - name: user_id
+          in: path
+          required: true
+          description: ID user yang ingin dihapus
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Berhasil hapus user dari team
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team~1{id}~1users/get/responses/200/content/application~1json/schema'
+        '400':
+          description: Gagal hapus user dari team
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  '/team/{team_code}/users':
+    post:
+      tags:
+        - Team
+      parameters:
+        - name: team_code
+          in: path
+          required: true
+          description: The team code of the team where the user will be added.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+              required:
+                - user_id
+      responses:
+        '200':
+          description: Berhasil memasukkan user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      username:
+                        type: string
+                      created_at:
+                        type: string
+                      updated_at:
+                        type: string
+        '400':
+          description: Gagal memasukkan user
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  /tasks:
+    post:
+      tags:
+        - Task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                deadline:
+                  type: string
+                class_id:
+                  type: string
+                team_id:
+                  type: string
+                user_id:
+                  type: string
+              required:
+                - name
+                - description
+                - deadline
+      responses:
+        '200':
+          description: Berhasil membuat tugas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      deadline:
+                        type: string
+                      created_at:
+                        type: string
+                      updated_at:
+                        type: string
+        '400':
+          description: Gagal membuat tugas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  '/tasks/{id}':
+    put:
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID tugas yang ingin diupdate
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/paths/~1tasks/post/requestBody/content/application~1json/schema'
+      responses:
+        '200':
+          description: Berhasil update data tugas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1tasks/post/responses/200/content/application~1json/schema'
+        '400':
+          description: Gagal update data tugas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+    delete:
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID tugas yang ingin dihapus
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Berhasil menghapus tugas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1tasks/post/responses/200/content/application~1json/schema'
+        '400':
+          description: Gagal menghapus tugas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+    get:
+      tags:
+        - Task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID tugas yang ingin diambil
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Berhasil mengambil data tugas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1tasks/post/responses/200/content/application~1json/schema'
+        '400':
+          description: Gagal mengambil data tugas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  /tasks/by-context:
+    get:
+      tags:
+        - Task
+      parameters:
+        - name: context
+          in: query
+          required: true
+          description: 'Jenis filter untuk tugas (class, team, atau user)'
+          schema:
+            type: string
+            enum:
+              - class
+              - team
+              - user
+        - name: context_id
+          in: query
+          required: true
+          description: 'ID yang digunakan untuk memfilter (ID class, team, atau user)'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Berhasil mengambil daftar tugas berdasarkan filter
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1tasks~1by-user/get/responses/200/content/application~1json/schema'
+        '400':
+          description: Gagal mengambil daftar tugas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
+  /tasks/by-user:
+    get:
+      tags:
+        - Task
+      responses:
+        '200':
+          description: Berhasil mengambil daftar tugas berdasarkan filter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        deadline:
+                          type: string
+                        created_at:
+                          type: string
+                        updated_at:
+                          type: string
+        '400':
+          description: Gagal mengambil daftar tugas
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1team/post/responses/400/content/application~1json/schema'
