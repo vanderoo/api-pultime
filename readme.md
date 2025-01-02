@@ -143,8 +143,6 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek ini di lin
 - Dokumentasi API dapat diakses di endpoint berikut setelah server berjalan:
   `http://{HOSTNAME}:{PORT}/api-docs`
 
-- Dokumentasi API juga dapat diakses secara online di [tautan ini](https://pultime.api.deroo.tech/api-docs).
-
 Dokumentasi ini disediakan oleh Swagger untuk kemudahan eksplorasi dan pengujian endpoint.
 
 ---
